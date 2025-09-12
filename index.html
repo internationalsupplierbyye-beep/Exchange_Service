@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MMK ↔ THB ငွေလဲတွက်ချက်ခြင်း (မြန်မာအရင် • V3)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    body { background: #f0f4f8; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    header { background: linear-gradient(to right, #2563eb, #10b981); color: white; padding: 1.5rem; text-align: center; border-radius: 0.75rem; margin-bottom: 1rem; }
+    .box { background: white; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.25rem; margin-bottom: 1.25rem; }
+    .btn { border-radius: 0.75rem; border: none; background: #1f2937; color: white; padding: 0.55rem 0.9rem; font-size: 0.9rem; cursor: pointer; transition: background .2s, transform .05s; }
+    .btn:hover { background: #0f172a; } .btn:active { transform: translateY(1px); }
+    .label { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; display:block; }
+    .sub { font-size: 0.8rem; color: #4b5563; margin-bottom: 0.4rem; }
+    .note { font-size: 0.8rem; color: #4b5563; margin-top:0.25rem; }
+    .rate-note { font-size: 0.85rem; color: #6b7280; margin-top:0.5rem; }
+    .thanks { color: #059669; font-size: 0.85rem; margin-top: 0.6rem; }
+  </style>
+</head>
+<body class="p-4">
+
+  <header>
+    <h1 class="text-2xl font-bold">MMK (မြန်မာငွေ) ↔ THB (ထိုင်းငွေ) ငွေလဲတွက်ချက်ခြင်း</h1>
+    <p class="text-sm">MMK ↔ THB Exchange Calculator</p>
+    <p class="text-sm mt-1">ငွေဈေး – မြန်မာငွေ ၁ သိန်း = ဘတ်</p>
+    <p class="text-sm">Format: 100,000 MMK = THB</p>
+  </header>
+
+  <main class="max-w-2xl mx-auto">
+    <!-- Rate Entry -->
+    <section class="box">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="label">မြန်မာငွေ ၁ သိန်း အတွက် ဘတ် (THB) ပမာဏ</label>
+          <p class="sub">THB per 100,000 MMK</p>
+          <input id="rate100k" class="w-full border rounded p-2" type="text" placeholder="760" inputmode="decimal">
+        </div>
+        <div>
+          <label class="label">၁ ဘတ် အတွက် မြန်မာကျပ်</label>
+          <p class="sub">MMK per 1 THB</p>
+          <input id="ratePerThb" class="w-full border rounded p-2" type="text" placeholder="131.58" inputmode="decimal">
+        </div>
+      </div>
+    </section>
+
+    <!-- THB → MMK -->
+    <section id="box-thb2mmk" class="box capture-target">
+      <h2 class="text-lg font-semibold mb-2">ဘတ် → မြန်မာကျပ်</h2>
+      <p class="sub">THB → MMK</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="label">ဘတ်ငွေ</label>
+          <p class="sub">Input THB</p>
+          <input id="thbIn" class="w-full border rounded p-2" type="text" placeholder="6500" inputmode="numeric">
+        </div>
+        <div>
+          <label class="label">မြန်မာကျပ်</label>
+          <p class="sub">Result MMK</p>
+          <output id="mmkOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px]"></output>
+        </div>
+      </div>
+      <div class="text-center mt-3 section-footer">
+        <p class="note">တွက်ချက်နည်း – မြန်မာငွေ = ဘတ် × ၁ သိန်း ÷ ဈေးနှုန်း<br><span class="text-gray-400">Formula: MMK = THB × 100,000 ÷ rate</span></p>
+        <p id="rateNote1" class="rate-note"></p>
+        <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
+      </div>
+      <button type="button" onclick="saveBoxAsJpgVisible('box-thb2mmk','thb-to-mmk.jpg')" class="btn mt-3">Save JPEG</button>
+    </section>
+
+    <!-- MMK → THB -->
+    <section id="box-mmk2thb" class="box capture-target">
+      <h2 class="text-lg font-semibold mb-2">မြန်မာကျပ် → ဘတ်</h2>
+      <p class="sub">MMK → THB</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="label">မြန်မာကျပ်</label>
+          <p class="sub">Input MMK</p>
+          <input id="mmkIn" class="w-full border rounded p-2" type="text" placeholder="1000000" inputmode="numeric">
+        </div>
+        <div>
+          <label class="label">ဘတ်ငွေ</label>
+          <p class="sub">Result THB</p>
+          <output id="thbOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px]"></output>
+        </div>
+      </div>
+      <div class="text-center mt-3 section-footer">
+        <p class="note">တွက်ချက်နည်း – ဘတ် = မြန်မာငွေ × ဈေးနှုန်း ÷ ၁ သိန်း<br><span class="text-gray-400">Formula: THB = MMK × rate ÷ 100,000</span></p>
+        <p id="rateNote2" class="rate-note"></p>
+        <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
+      </div>
+      <button type="button" onclick="saveBoxAsJpgVisible('box-mmk2thb','mmk-to-thb.jpg')" class="btn mt-3">Save JPEG</button>
+    </section>
+  </main>
+
+<script>
+let lock=false;
+const $ = s => document.querySelector(s);
+const parseNum=v=>{const n=Number(String(v).replace(/,/g,''));return Number.isFinite(n)?n:NaN;}
+const fmt=(n,d=2)=>new Intl.NumberFormat(undefined,{maximumFractionDigits:d}).format(n);
+
+function refreshRateNote(){
+  const r = getRate();
+  if(Number.isFinite(r) && r>0){
+    const inv = 100000 / r;
+    $('#rateNote1').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmt(r)} ဘတ် | ၁ ဘတ် = ${fmt(inv,2)} ကျပ်`;
+    $('#rateNote2').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmt(r)} ဘတ် | ၁ ဘတ် = ${fmt(inv,2)} ကျပ်`;
+  }else{
+    $('#rateNote1').textContent = '';
+    $('#rateNote2').textContent = '';
+  }
+}
+
+function syncFrom100k(){
+  if(lock) return; lock=true;
+  const r=parseNum($('#rate100k').value);
+  if(Number.isFinite(r)&&r>0){
+    const inv=100000/r;
+    $('#ratePerThb').value=fmt(inv,4);
+  }
+  lock=false; refreshRateNote(); recalc();
+}
+function syncFromPerThb(){
+  if(lock) return; lock=true;
+  const inv=parseNum($('#ratePerThb').value);
+  if(Number.isFinite(inv)&&inv>0){
+    const r=100000/inv;
+    $('#rate100k').value=fmt(r,2);
+  }
+  lock=false; refreshRateNote(); recalc();
+}
+function getRate(){
+  const a=parseNum($('#rate100k').value); if(Number.isFinite(a)&&a>0) return a;
+  const b=parseNum($('#ratePerThb').value); if(Number.isFinite(b)&&b>0) return 100000/b;
+  return NaN;
+}
+function recalc(){
+  const rate=getRate();
+  const thb=parseNum($('#thbIn').value);
+  const mmk=parseNum($('#mmkIn').value);
+  $('#mmkOut').textContent=(Number.isFinite(rate)&&Number.isFinite(thb))?fmt((thb*100000)/rate)+' MMK':'';
+  $('#thbOut').textContent=(Number.isFinite(rate)&&Number.isFinite(mmk))?fmt((mmk*rate)/100000)+' THB':'';
+}
+$('#rate100k').addEventListener('input',syncFrom100k);
+$('#ratePerThb').addEventListener('input',syncFromPerThb);
+$('#thbIn').addEventListener('input',recalc);
+$('#mmkIn').addEventListener('input',recalc);
+$('#rate100k').value='760'; syncFrom100k();
+
+// NEW: Capture the VISIBLE section directly (no off-screen clone).
+// Hide buttons during capture so they won't appear.
+async function saveBoxAsJpgVisible(id, filename){
+  await document.fonts?.ready;
+  const section = document.getElementById(id);
+
+  // ensure latest layout
+  await new Promise(r => requestAnimationFrame(r));
+
+  // temporarily hide all buttons inside
+  const hidden = [];
+  section.querySelectorAll('button').forEach(btn => {
+    hidden.push([btn, btn.style.display]);
+    btn.style.display = 'none';
+  });
+
+  const canvas = await html2canvas(section, {
+    backgroundColor: '#ffffff',
+    scale: Math.min(2, window.devicePixelRatio*1.5),
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
+    windowWidth: section.scrollWidth,
+    windowHeight: section.scrollHeight
+  });
+
+  // restore buttons
+  hidden.forEach(([el,prev]) => el.style.display = prev || "");
+
+  // compose a title on a new canvas (so title is present; still no button)
+  const margin = 20;
+  const titleText = 'Thailand Guide - Supplier By Ye';
+  const titleHeight = 28;
+  const composed = document.createElement('canvas');
+  composed.width  = canvas.width + margin*2;
+  composed.height = canvas.height + margin*3 + titleHeight;
+  const ctx = composed.getContext('2d');
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,composed.width,composed.height);
+  ctx.fillStyle = '#000000'; ctx.font = 'bold 20px system-ui, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText(titleText, composed.width/2, margin);
+  ctx.drawImage(canvas, margin, margin*2 + titleHeight);
+
+  if(composed.toBlob){
+    composed.toBlob(function(blob){
+      const url = URL.createObjectURL(blob);
+      triggerDownload(url, filename);
+      setTimeout(()=>URL.revokeObjectURL(url), 5000);
+    }, 'image/jpeg', 0.92);
+  } else {
+    triggerDownload(composed.toDataURL('image/jpeg',0.92), filename);
+  }
+}
+
+function triggerDownload(url, filename){
+  const a=document.createElement('a'); a.href=url; a.download=filename;
+  if(typeof a.download==='string'){ document.body.appendChild(a); a.click(); document.body.removeChild(a); }
+  else { window.open(url,'_blank'); }
+}
+</script>
+
+</body>
+</html>
