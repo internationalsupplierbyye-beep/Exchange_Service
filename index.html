@@ -16,10 +16,10 @@
     .sub { font-size: 0.8rem; color: #4b5563; margin-bottom: 0.4rem; }
     .note { font-size: 0.8rem; color: #4b5563; margin-top:0.25rem; }
     .rate-note { font-size: 0.85rem; color: #6b7280; margin-top:0.5rem; }
-    .thanks { color: #059669; font-size: 0.85rem; margin-top: 0.6rem; }
+    .thanks { color: #059669; font-size: 0.85rem; margin-top: 0.6rem; font-weight:600; }
     .warning { color:#dc2626; font-size:0.85rem; margin-top:0.25rem; font-weight:600; }
     .flag { width: 22px; height: 16px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.08) inset; }
-    .row { display:flex; align-items:center; gap:.5rem; }
+    .row { display:flex; align-items:center; gap:.8rem; }
     .big { font-size: 1.25rem; } /* ~text-xl */
   </style>
 </head>
@@ -110,8 +110,9 @@
       <div class="text-center mt-3 section-footer">
         <p class="note">တွက်ချက်နည်း – မြန်မာငွေ = ဘတ် × ၁ သိန်း ÷ ဈေးနှုန်း<br><span class="text-gray-400">Formula: MMK = THB × 100,000 ÷ rate</span></p>
         <p id="rateNote1" class="rate-note"></p>
+        <p class="warning">ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။</p>
+        <p class="warning">ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
         <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
-        <p class="warning">ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။ ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
       </div>
       <button type="button" onclick="saveBoxAsJpgVisible('box-thb2mmk','thb-to-mmk.jpg')" class="btn mt-3">Save JPEG</button>
     </section>
@@ -156,8 +157,9 @@
       <div class="text-center mt-3 section-footer">
         <p class="note">တွက်ချက်နည်း – ဘတ် = မြန်မာငွေ × ဈေးနှုန်း ÷ ၁ သိန်း<br><span class="text-gray-400">Formula: THB = MMK × rate ÷ 100,000</span></p>
         <p id="rateNote2" class="rate-note"></p>
-        <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
-        <p class="warning">ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။ ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
+        <p class="warning">ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။</p>
+        <p class="warning">ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
+	<p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
       </div>
       <button type="button" onclick="saveBoxAsJpgVisible('box-mmk2thb','mmk-to-thb.jpg')" class="btn mt-3">Save JPEG</button>
     </section>
@@ -230,6 +232,20 @@ function recalc(){
   document.getElementById('mmkOut').textContent=(Number.isFinite(rate)&&Number.isFinite(thb))?fmtInt((thb*100000)/rate)+' MMK':'';
   document.getElementById('thbOut').textContent=(Number.isFinite(rate)&&Number.isFinite(mmk))?fmtInt((mmk*rate)/100000)+' THB':'';
 }
+
+/* 🔹 Auto-select on focus/click for inputs (so you can overwrite without deleting) */
+['rate100k','ratePerThb','thbIn','mmkIn'].forEach(id=>{
+  const el = document.getElementById(id);
+  const selectAll = () => {
+    try {
+      el.selectionStart = 0;
+      el.selectionEnd = el.value.length;
+    } catch {}
+  };
+  el.addEventListener('focus', () => setTimeout(selectAll, 0));
+  el.addEventListener('mouseup', (e)=>{ e.preventDefault(); selectAll(); });
+  el.addEventListener('touchend', (e)=>{ e.preventDefault(); selectAll(); }, {passive:false});
+});
 
 // Listeners: do NOT mutate the input; just compute
 document.getElementById('rate100k').addEventListener('input', syncFrom100k);
