@@ -233,18 +233,23 @@ function recalc(){
   document.getElementById('thbOut').textContent=(Number.isFinite(rate)&&Number.isFinite(mmk))?fmtInt((mmk*rate)/100000)+' THB':'';
 }
 
-/* 🔹 Auto-select on focus/click for inputs (so you can overwrite without deleting) */
+/* ✅ Safe Auto-Select (Mobile Keyboard Friendly) */
 ['rate100k','ratePerThb','thbIn','mmkIn'].forEach(id=>{
   const el = document.getElementById(id);
-  const selectAll = () => {
-    try {
-      el.selectionStart = 0;
-      el.selectionEnd = el.value.length;
-    } catch {}
-  };
-  el.addEventListener('focus', () => setTimeout(selectAll, 0));
-  el.addEventListener('mouseup', (e)=>{ e.preventDefault(); selectAll(); });
-  el.addEventListener('touchend', (e)=>{ e.preventDefault(); selectAll(); }, {passive:false});
+
+  // Focus: give a tiny delay so Android/iOS keyboard pops reliably
+  el.addEventListener('focus', ()=>{
+    setTimeout(()=>{
+      try { el.setSelectionRange(0, el.value.length); } catch(e){}
+    },150);
+  });
+
+  // Desktop convenience: select all on mouseup (no preventDefault so keyboards aren't blocked)
+  el.addEventListener('mouseup', ()=>{
+    try { el.setSelectionRange(0, el.value.length); } catch(e){}
+  });
+});
+el.addEventListener('touchend', (e)=>{ e.preventDefault(); selectAll(); }, {passive:false});
 });
 
 // Listeners: do NOT mutate the input; just compute
