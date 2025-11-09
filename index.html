@@ -3,277 +3,225 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MMK ↔ THB ငွေလဲတွက်ချက်ခြင်း (မြန်မာအရင် • V3 + Flags • Safe Input)</title>
+  <title>MMK ↔ THB Calculator (Integer Ceil Round)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
-    body { background: #f0f4f8; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    header { background: linear-gradient(to right, #2563eb, #10b981); color: white; padding: 1.5rem; text-align: center; border-radius: 0.75rem; margin-bottom: 1rem; }
-    .box { background: white; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.25rem; margin-bottom: 1.25rem; }
-    .btn { border-radius: 0.75rem; border: none; background: #1f2937; color: white; padding: 0.55rem 0.9rem; font-size: 0.9rem; cursor: pointer; transition: background .2s, transform .05s; }
-    .btn:hover { background: #0f172a; } .btn:active { transform: translateY(1px); }
-    .label { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; display:block; }
-    .sub { font-size: 0.8rem; color: #4b5563; margin-bottom: 0.4rem; }
-    .note { font-size: 0.8rem; color: #4b5563; margin-top:0.25rem; }
-    .rate-note { font-size: 0.85rem; color: #6b7280; margin-top:0.5rem; }
-    .thanks { color: #059669; font-size: 0.85rem; margin-top: 0.6rem; font-weight:600; }
-    .warning { color:#dc2626; font-size:0.85rem; margin-top:0.25rem; font-weight:600; }
-    .flag { width: 22px; height: 16px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.08) inset; }
-    .row { display:flex; align-items:center; gap:.8rem; }
-    .big { font-size: 1.25rem; } /* ~text-xl */
+    body { background:#f0f4f8; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+    header { background:linear-gradient(to right,#2563eb,#10b981); color:white; padding:1.2rem; text-align:center; border-radius:0.7rem; margin-bottom:1rem; }
+    .box { background:white; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1.25rem; margin-bottom:1.25rem; }
+    .label { font-size:1.15rem; font-weight:700; display:inline-flex; align-items:center; gap:.5rem; }
+    input, output { font-size:1.2rem; font-weight:600; }
+    .sub { font-size:0.85rem; color:#4b5563; margin-bottom:0.3rem; }
+    .rate-note { font-size:0.9rem; color:#6b7280; margin-top:0.4rem; font-weight:600; }
+    .thanks { color:#059669; font-size:0.95rem; margin-top:0.5rem; font-weight:600; }
+    .btn { border-radius:0.75rem; border:none; background:#1f2937; color:white; padding:0.55rem 0.9rem; font-size:0.9rem; cursor:pointer; transition:background .2s, transform .05s; }
+    .btn:hover { background:#0f172a; } .btn:active { transform:translateY(1px); }
+    .flag { width:20px; height:auto; border-radius:2px; display:inline-block; }
   </style>
 </head>
 <body class="p-4">
 
-  <header>
-    <h1 class="text-2xl font-bold">MMK (မြန်မာငွေ) ↔ THB (ထိုင်းငွေ) ငွေလဲတွက်ချက်ခြင်း</h1>
-    <p class="text-sm">MMK ↔ THB Exchange Calculator</p>
-    <p class="text-sm mt-1">ငွေဈေး – မြန်မာငွေ ၁ သိန်း = ဘတ်</p>
-    <p class="text-sm">Format: 100,000 MMK = THB</p>
-  </header>
+<header>
+  <h1 class="text-2xl font-bold">MMK ↔ THB ငွေလဲတွက်ချက်ခြင်း</h1>
+  <p class="text-sm">MMK ↔ THB Exchange Calculator</p>
+</header>
 
-  <main class="max-w-2xl mx-auto">
-    <!-- Rate Entry -->
-    <section class="box">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="label">
-            <span class="row">
-              <!-- TH flag -->
-              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="3" height="2" fill="#A51931"/>
-                <rect y="0.4" width="3" height="1.2" fill="#FFF"/>
-                <rect y="0.6" width="3" height="0.8" fill="#2D2A4A"/>
-              </svg>
-              မြန်မာငွေ ၁ သိန်း အတွက် ဘတ် (THB) ပမာဏ
-            </span>
-          </label>
-          <p class="sub">THB per 100,000 MMK</p>
-          <input id="rate100k" class="w-full border rounded p-2 big" type="text" placeholder="760" inputmode="decimal">
-        </div>
-        <div>
-          <label class="label">
-            <span class="row">
-              <!-- MM flag -->
-              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="3" height="2" fill="#FECB00"/>
-                <rect y="0.666" width="3" height="0.666" fill="#34B233"/>
-                <rect y="1.333" width="3" height="0.667" fill="#EA2839"/>
-                <polygon points="1.5,0.35 1.2,1.6 2,0.9 1,0.9 1.8,1.6" fill="#FFF"/>
-              </svg>
-              ၁ ဘတ် အတွက် မြန်မာကျပ်
-            </span>
-          </label>
-          <p class="sub">MMK per 1 THB</p>
-          <input id="ratePerThb" class="w-full border rounded p-2 big" type="text" placeholder="131.58" inputmode="decimal">
-        </div>
-      </div>
-    </section>
+<main class="max-w-2xl mx-auto">
 
-    <!-- THB → MMK -->
-    <section id="box-thb2mmk" class="box capture-target">
-      <h2 class="text-lg font-semibold mb-2">ဘတ် → မြန်မာကျပ်</h2>
-      <p class="sub">THB → MMK</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="label">
-            <span class="row">
-              <!-- TH flag -->
-              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="3" height="2" fill="#A51931"/>
-                <rect y="0.4" width="3" height="1.2" fill="#FFF"/>
-                <rect y="0.6" width="3" height="0.8" fill="#2D2A4A"/>
-              </svg>
-              ဘတ်ငွေ (THB)
-            </span>
-          </label>
-          <p class="sub">Input THB</p>
-          <input id="thbIn" class="w-full border rounded p-2 big" type="text" placeholder="6500" inputmode="numeric">
-        </div>
-        <div>
-          <label class="label">
-            <span class="row">
-              <!-- MM flag -->
-              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="3" height="2" fill="#FECB00"/>
-                <rect y="0.666" width="3" height="0.666" fill="#34B233"/>
-                <rect y="1.333" width="3" height="0.667" fill="#EA2839"/>
-                <polygon points="1.5,0.35 1.2,1.6 2,0.9 1,0.9 1.8,1.6" fill="#FFF"/>
-              </svg>
-              မြန်မာကျပ် (MMK)
-            </span>
-          </label>
-          <p class="sub">Result MMK</p>
-          <output id="mmkOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px] big"></output>
-        </div>
-      </div>
-      <div class="text-center mt-3 section-footer">
-        <p class="note">တွက်ချက်နည်း – မြန်မာငွေ = ဘတ် × ၁ သိန်း ÷ ဈေးနှုန်း<br><span class="text-gray-400">Formula: MMK = THB × 100,000 ÷ rate</span></p>
-        <p id="rateNote1" class="rate-note"></p>
-        <p class="warning">ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။</p>
-        <p class="warning">ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
-        <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
-      </div>
-      <button type="button" onclick="saveBoxAsJpgVisible('box-thb2mmk','thb-to-mmk.jpg')" class="btn mt-3">Save JPEG</button>
-    </section>
+<!-- Rate Entry -->
+<section class="box">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div>
+      <label class="label">
+        <img src="https://flagcdn.com/w20/th.png" alt="TH" class="flag">
+        <span>မြန်မာငွေ ၁ သိန်း အတွက် ဘတ် (THB)</span>
+      </label>
+      <p class="sub">THB per 100,000 MMK</p>
+      <input id="rate100k" class="w-full border rounded p-2" type="text" placeholder="820" inputmode="decimal">
+    </div>
+    <div>
+      <label class="label">
+        <img src="https://flagcdn.com/w20/mm.png" alt="MM" class="flag">
+        <span>၁ ဘတ် အတွက် မြန်မာကျပ်</span>
+      </label>
+      <p class="sub">MMK per 1 THB</p>
+      <input id="ratePerThb" class="w-full border rounded p-2" type="text" placeholder="121.95" inputmode="decimal">
+    </div>
+  </div>
+</section>
 
-    <!-- MMK → THB -->
-    <section id="box-mmk2thb" class="box capture-target">
-      <h2 class="text-lg font-semibold mb-2">မြန်မာကျပ် → ဘတ်</h2>
-      <p class="sub">MMK → THB</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="label">
-            <span class="row">
-              <!-- MM flag -->
-              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="3" height="2" fill="#FECB00"/>
-                <rect y="0.666" width="3" height="0.666" fill="#34B233"/>
-                <rect y="1.333" width="3" height="0.667" fill="#EA2839"/>
-                <polygon points="1.5,0.35 1.2,1.6 2,0.9 1,0.9 1.8,1.6" fill="#FFF"/>
-              </svg>
-              မြန်မာကျပ် (MMK)
-            </span>
-          </label>
-          <p class="sub">Input MMK</p>
-          <input id="mmkIn" class="w-full border rounded p-2 big" type="text" placeholder="1000000" inputmode="numeric">
-        </div>
-        <div>
-          <label class="label">
-            <span class="row">
-              <!-- TH flag -->
-              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="3" height="2" fill="#A51931"/>
-                <rect y="0.4" width="3" height="1.2" fill="#FFF"/>
-                <rect y="0.6" width="3" height="0.8" fill="#2D2A4A"/>
-              </svg>
-              ဘတ်ငွေ (THB)
-            </span>
-          </label>
-          <p class="sub">Result THB</p>
-          <output id="thbOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px] big"></output>
-        </div>
-      </div>
-      <div class="text-center mt-3 section-footer">
-        <p class="note">တွက်ချက်နည်း – ဘတ် = မြန်မာငွေ × ဈေးနှုန်း ÷ ၁ သိန်း<br><span class="text-gray-400">Formula: THB = MMK × rate ÷ 100,000</span></p>
-        <p id="rateNote2" class="rate-note"></p>
-        <p class="warning">ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။</p>
-        <p class="warning">ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
-	<p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
-      </div>
-      <button type="button" onclick="saveBoxAsJpgVisible('box-mmk2thb','mmk-to-thb.jpg')" class="btn mt-3">Save JPEG</button>
-    </section>
-  </main>
+<!-- THB → MMK -->
+<section id="box-thb2mmk" class="box capture-target">
+  <h2 class="text-lg font-semibold mb-2">ဘတ် → မြန်မာကျပ်</h2>
+  <p class="sub">THB → MMK</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div>
+      <label class="label">
+        <img src="https://flagcdn.com/w20/th.png" alt="TH" class="flag">
+        <span>ဘတ်ငွေ</span>
+      </label>
+      <p class="sub">Input THB</p>
+      <input id="thbIn" class="w-full border rounded p-2" type="text" placeholder="6500" inputmode="numeric">
+    </div>
+    <div>
+      <label class="label">
+        <img src="https://flagcdn.com/w20/mm.png" alt="MM" class="flag">
+        <span>မြန်မာကျပ်</span>
+      </label>
+      <p class="sub">Result MMK</p>
+      <output id="mmkOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px]"></output>
+    </div>
+  </div>
+  <div class="text-center mt-3 section-footer">
+    <p class="rate-note" id="rateNote1"></p>
+    <p class="text-red-600 font-semibold mt-2">
+      ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။</p> 
+    <p class="text-red-600 font-semibold mt-2">
+      ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
+    <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
+    </p>
+  </div>
+  <button type="button" onclick="saveBoxAsJpgVisible('box-thb2mmk','thb-to-mmk.jpg')" class="btn mt-3">Save JPEG</button>
+</section>
+
+<!-- MMK → THB -->
+<section id="box-mmk2thb" class="box capture-target">
+  <h2 class="text-lg font-semibold mb-2">မြန်မာကျပ် → ဘတ်</h2>
+  <p class="sub">MMK → THB</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div>
+      <label class="label">
+        <img src="https://flagcdn.com/w20/mm.png" alt="MM" class="flag">
+        <span>မြန်မာကျပ်</span>
+      </label>
+      <p class="sub">Input MMK</p>
+      <input id="mmkIn" class="w-full border rounded p-2" type="text" placeholder="1000000" inputmode="numeric">
+    </div>
+    <div>
+      <label class="label">
+        <img src="https://flagcdn.com/w20/th.png" alt="TH" class="flag">
+        <span>ဘတ်ငွေ</span>
+      </label>
+      <p class="sub">Result THB</p>
+      <output id="thbOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px]"></output>
+    </div>
+  </div>
+  <div class="text-center mt-3 section-footer">
+    <p class="rate-note" id="rateNote2"></p>
+    <p class="text-red-600 font-semibold mt-2">
+      ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။</p> 
+    <p class="text-red-600 font-semibold mt-2">
+      ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
+    <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
+    </p>
+  </div>
+  <button type="button" onclick="saveBoxAsJpgVisible('box-mmk2thb','mmk-to-thb.jpg')" class="btn mt-3">Save JPEG</button>
+</section>
+
+</main>
 
 <script>
-let lock=false;
+// Myanmar digits → Latin digits
+function normalizeDigits(v){
+  const map = {'၀':'0','၁':'1','၂':'2','၃':'3','၄':'4','၅':'5','၆':'6','၇':'7','၈':'8','၉':'9'};
+  return (v || '').replace(/[၀၁၂၃၄၅၆၇၈၉]/g, d => map[d] ?? d);
+}
+
+// helpers
 const $ = s => document.querySelector(s);
-
-// Map Myanmar digits to ASCII without touching the visible input
-function mmDigitsToAscii(str){
-  if (str == null) return "";
-  const mm = "၀၁၂၃၄၅၆၇၈၉";
-  const en = "0123456789";
-  return String(str).replace(/[၀-၉]/g, d => en[mm.indexOf(d)]);
-}
-
-// Parser: keep user's typing intact; only convert for calculation
-function parseNum(v){
-  const s = String(v ?? "");
-  const ascii = mmDigitsToAscii(s);
-  // Allow digits, comma and dot; drop other characters for the numeric parse only
-  const cleaned = ascii.replace(/[^0-9.,-]/g, "").replace(/,/g, "");
-  const n = Number(cleaned);
+const parseNum = v => {
+  v = normalizeDigits(String(v).trim());
+  const n = Number(v.replace(/,/g,''));
   return Number.isFinite(n) ? n : NaN;
-}
+};
 
-// Integer-only formatter (rounded)
-const fmtInt = (n) => new Intl.NumberFormat(undefined,{ maximumFractionDigits: 0 }).format(Math.round(n));
+// integer CEIL format (always round up if there is any decimal)
+const fmt0ceil = n => new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
+}).format(Math.ceil(n));
 
+// for rate note (human friendly)
+const fmt6 = n => new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 6
+}).format(n);
+
+// show rate info
 function refreshRateNote(){
   const r = getRate();
   if(Number.isFinite(r) && r>0){
     const inv = 100000 / r;
-    document.getElementById('rateNote1').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmtInt(r)} ဘတ် | ၁ ဘတ် = ${fmtInt(inv)} ကျပ်`;
-    document.getElementById('rateNote2').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmtInt(r)} ဘတ် | ၁ ဘတ် = ${fmtInt(inv)} ကျပ်`;
+    $('#rateNote1').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmt6(r)} ဘတ် | ၁ ဘတ် = ${fmt6(inv)} ကျပ်`;
+    $('#rateNote2').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmt6(r)} ဘတ် | ၁ ဘတ် = ${fmt6(inv)} ကျပ်`;
   }else{
-    document.getElementById('rateNote1').textContent = '';
-    document.getElementById('rateNote2').textContent = '';
+    $('#rateNote1').textContent = '';
+    $('#rateNote2').textContent = '';
   }
 }
 
+function getRate(){
+  const a = parseNum($('#rate100k').value);
+  const b = parseNum($('#ratePerThb').value);
+  if(Number.isFinite(a) && a>0) return a;
+  if(Number.isFinite(b) && b>0) return 100000 / b;
+  return NaN;
+}
+
+function recalc(){
+  const rate = getRate();
+  const thb  = parseNum($('#thbIn').value);
+  const mmk  = parseNum($('#mmkIn').value);
+
+  $('#mmkOut').textContent = (Number.isFinite(rate) && Number.isFinite(thb))
+    ? fmt0ceil(thb*100000/rate) + ' MMK' : '';
+  $('#thbOut').textContent = (Number.isFinite(rate) && Number.isFinite(mmk))
+    ? fmt0ceil(mmk*rate/100000) + ' THB' : '';
+}
+
+// sync rates
+let lock=false;
 function syncFrom100k(){
   if(lock) return; lock=true;
-  const r=parseNum(document.getElementById('rate100k').value);
+  const r = parseNum($('#rate100k').value);
   if(Number.isFinite(r) && r>0){
-    const inv=100000/r;
-    document.getElementById('ratePerThb').value = (Math.round(inv * 10000)/10000).toString();
+    const inv = 100000 / r;
+    $('#ratePerThb').value = fmt6(inv);
   }
   lock=false; refreshRateNote(); recalc();
 }
 function syncFromPerThb(){
   if(lock) return; lock=true;
-  const inv=parseNum(document.getElementById('ratePerThb').value);
+  const inv = parseNum($('#ratePerThb').value);
   if(Number.isFinite(inv) && inv>0){
-    const r=100000/inv;
-    document.getElementById('rate100k').value = (Math.round(r * 100)/100).toString();
+    const r = 100000 / inv;
+    $('#rate100k').value = fmt6(r);
   }
   lock=false; refreshRateNote(); recalc();
 }
-function getRate(){
-  const a=parseNum(document.getElementById('rate100k').value); if(Number.isFinite(a)&&a>0) return a;
-  const b=parseNum(document.getElementById('ratePerThb').value); if(Number.isFinite(b)&&b>0) return 100000/b;
-  return NaN;
-}
-function recalc(){
-  const rate=getRate();
-  const thb=parseNum(document.getElementById('thbIn').value);
-  const mmk=parseNum(document.getElementById('mmkIn').value);
-  document.getElementById('mmkOut').textContent=(Number.isFinite(rate)&&Number.isFinite(thb))?fmtInt((thb*100000)/rate)+' MMK':'';
-  document.getElementById('thbOut').textContent=(Number.isFinite(rate)&&Number.isFinite(mmk))?fmtInt((mmk*rate)/100000)+' THB':'';
-}
 
-/* ✅ Safe Auto-Select (Mobile Keyboard Friendly) */
+// events
 ['rate100k','ratePerThb','thbIn','mmkIn'].forEach(id=>{
-  const el = document.getElementById(id);
-
-  // Focus: give a tiny delay so Android/iOS keyboard pops reliably
-  el.addEventListener('focus', ()=>{
-    setTimeout(()=>{
-      try { el.setSelectionRange(0, el.value.length); } catch(e){}
-    },150);
-  });
-
-  // Desktop convenience: select all on mouseup (no preventDefault so keyboards aren't blocked)
-  el.addEventListener('mouseup', ()=>{
-    try { el.setSelectionRange(0, el.value.length); } catch(e){}
-  });
+  document.getElementById(id).addEventListener('input', recalc);
 });
-el.addEventListener('touchend', (e)=>{ e.preventDefault(); selectAll(); }, {passive:false});
-});
+$('#rate100k').addEventListener('input', syncFrom100k);
+$('#ratePerThb').addEventListener('input', syncFromPerThb);
 
-// Listeners: do NOT mutate the input; just compute
-document.getElementById('rate100k').addEventListener('input', syncFrom100k);
-document.getElementById('ratePerThb').addEventListener('input', syncFromPerThb);
-document.getElementById('thbIn').addEventListener('input', recalc);
-document.getElementById('mmkIn').addEventListener('input', recalc);
-
-// Default rate
-document.getElementById('rate100k').value='760';
+// defaults
+$('#rate100k').value = '820';
 syncFrom100k();
 
-// Visible section capture (hide buttons during capture)
+// Save visible section as JPEG
 async function saveBoxAsJpgVisible(id, filename){
   await document.fonts?.ready;
   const section = document.getElementById(id);
   await new Promise(r => requestAnimationFrame(r));
-
   const hidden = [];
   section.querySelectorAll('button').forEach(btn => {
     hidden.push([btn, btn.style.display]);
     btn.style.display = 'none';
   });
-
   const canvas = await html2canvas(section, {
     backgroundColor: '#ffffff',
     scale: Math.min(2, window.devicePixelRatio*1.5),
@@ -283,19 +231,16 @@ async function saveBoxAsJpgVisible(id, filename){
     windowWidth: section.scrollWidth,
     windowHeight: section.scrollHeight
   });
+  hidden.forEach(([el,prev]) => el.style.display = prev || '');
 
-  hidden.forEach(([el,prev]) => el.style.display = prev || "");
-
-  const margin = 20;
-  const titleText = 'Thailand Guide - Supplier By Ye';
-  const titleHeight = 28;
+  const margin = 20, titleHeight = 28;
   const composed = document.createElement('canvas');
-  composed.width  = canvas.width + margin*2;
+  composed.width = canvas.width + margin*2;
   composed.height = canvas.height + margin*3 + titleHeight;
   const ctx = composed.getContext('2d');
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,composed.width,composed.height);
   ctx.fillStyle = '#000000'; ctx.font = 'bold 20px system-ui, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='top';
-  ctx.fillText(titleText, composed.width/2, margin);
+  ctx.fillText('Thailand Guide - Supplier By Ye', composed.width/2, margin);
   ctx.drawImage(canvas, margin, margin*2 + titleHeight);
 
   if(composed.toBlob){
@@ -304,11 +249,10 @@ async function saveBoxAsJpgVisible(id, filename){
       triggerDownload(url, filename);
       setTimeout(()=>URL.revokeObjectURL(url), 5000);
     }, 'image/jpeg', 0.92);
-  } else {
+  }else{
     triggerDownload(composed.toDataURL('image/jpeg',0.92), filename);
   }
 }
-
 function triggerDownload(url, filename){
   const a=document.createElement('a'); a.href=url; a.download=filename;
   if(typeof a.download==='string'){ document.body.appendChild(a); a.click(); document.body.removeChild(a); }
