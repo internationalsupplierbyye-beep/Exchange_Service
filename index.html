@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MMK ↔ THB ငွေလဲတွက်ချက်ခြင်း (မြန်မာအရင် • V3)</title>
+  <title>MMK ↔ THB ငွေလဲတွက်ချက်ခြင်း (မြန်မာအရင် • V3 + Flags • Safe Input)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
@@ -17,6 +17,10 @@
     .note { font-size: 0.8rem; color: #4b5563; margin-top:0.25rem; }
     .rate-note { font-size: 0.85rem; color: #6b7280; margin-top:0.5rem; }
     .thanks { color: #059669; font-size: 0.85rem; margin-top: 0.6rem; }
+    .warning { color:#dc2626; font-size:0.85rem; margin-top:0.25rem; font-weight:600; }
+    .flag { width: 22px; height: 16px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.08) inset; }
+    .row { display:flex; align-items:center; gap:.5rem; }
+    .big { font-size: 1.25rem; } /* ~text-xl */
   </style>
 </head>
 <body class="p-4">
@@ -33,14 +37,35 @@
     <section class="box">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="label">မြန်မာငွေ ၁ သိန်း အတွက် ဘတ် (THB) ပမာဏ</label>
+          <label class="label">
+            <span class="row">
+              <!-- TH flag -->
+              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="3" height="2" fill="#A51931"/>
+                <rect y="0.4" width="3" height="1.2" fill="#FFF"/>
+                <rect y="0.6" width="3" height="0.8" fill="#2D2A4A"/>
+              </svg>
+              မြန်မာငွေ ၁ သိန်း အတွက် ဘတ် (THB) ပမာဏ
+            </span>
+          </label>
           <p class="sub">THB per 100,000 MMK</p>
-          <input id="rate100k" class="w-full border rounded p-2" type="text" placeholder="760" inputmode="decimal">
+          <input id="rate100k" class="w-full border rounded p-2 big" type="text" placeholder="760" inputmode="decimal">
         </div>
         <div>
-          <label class="label">၁ ဘတ် အတွက် မြန်မာကျပ်</label>
+          <label class="label">
+            <span class="row">
+              <!-- MM flag -->
+              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="3" height="2" fill="#FECB00"/>
+                <rect y="0.666" width="3" height="0.666" fill="#34B233"/>
+                <rect y="1.333" width="3" height="0.667" fill="#EA2839"/>
+                <polygon points="1.5,0.35 1.2,1.6 2,0.9 1,0.9 1.8,1.6" fill="#FFF"/>
+              </svg>
+              ၁ ဘတ် အတွက် မြန်မာကျပ်
+            </span>
+          </label>
           <p class="sub">MMK per 1 THB</p>
-          <input id="ratePerThb" class="w-full border rounded p-2" type="text" placeholder="131.58" inputmode="decimal">
+          <input id="ratePerThb" class="w-full border rounded p-2 big" type="text" placeholder="131.58" inputmode="decimal">
         </div>
       </div>
     </section>
@@ -51,20 +76,42 @@
       <p class="sub">THB → MMK</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="label">ဘတ်ငွေ</label>
+          <label class="label">
+            <span class="row">
+              <!-- TH flag -->
+              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="3" height="2" fill="#A51931"/>
+                <rect y="0.4" width="3" height="1.2" fill="#FFF"/>
+                <rect y="0.6" width="3" height="0.8" fill="#2D2A4A"/>
+              </svg>
+              ဘတ်ငွေ (THB)
+            </span>
+          </label>
           <p class="sub">Input THB</p>
-          <input id="thbIn" class="w-full border rounded p-2" type="text" placeholder="6500" inputmode="numeric">
+          <input id="thbIn" class="w-full border rounded p-2 big" type="text" placeholder="6500" inputmode="numeric">
         </div>
         <div>
-          <label class="label">မြန်မာကျပ်</label>
+          <label class="label">
+            <span class="row">
+              <!-- MM flag -->
+              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="3" height="2" fill="#FECB00"/>
+                <rect y="0.666" width="3" height="0.666" fill="#34B233"/>
+                <rect y="1.333" width="3" height="0.667" fill="#EA2839"/>
+                <polygon points="1.5,0.35 1.2,1.6 2,0.9 1,0.9 1.8,1.6" fill="#FFF"/>
+              </svg>
+              မြန်မာကျပ် (MMK)
+            </span>
+          </label>
           <p class="sub">Result MMK</p>
-          <output id="mmkOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px]"></output>
+          <output id="mmkOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px] big"></output>
         </div>
       </div>
       <div class="text-center mt-3 section-footer">
         <p class="note">တွက်ချက်နည်း – မြန်မာငွေ = ဘတ် × ၁ သိန်း ÷ ဈေးနှုန်း<br><span class="text-gray-400">Formula: MMK = THB × 100,000 ÷ rate</span></p>
         <p id="rateNote1" class="rate-note"></p>
         <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
+        <p class="warning">ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။ ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
       </div>
       <button type="button" onclick="saveBoxAsJpgVisible('box-thb2mmk','thb-to-mmk.jpg')" class="btn mt-3">Save JPEG</button>
     </section>
@@ -75,20 +122,42 @@
       <p class="sub">MMK → THB</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="label">မြန်မာကျပ်</label>
+          <label class="label">
+            <span class="row">
+              <!-- MM flag -->
+              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="3" height="2" fill="#FECB00"/>
+                <rect y="0.666" width="3" height="0.666" fill="#34B233"/>
+                <rect y="1.333" width="3" height="0.667" fill="#EA2839"/>
+                <polygon points="1.5,0.35 1.2,1.6 2,0.9 1,0.9 1.8,1.6" fill="#FFF"/>
+              </svg>
+              မြန်မာကျပ် (MMK)
+            </span>
+          </label>
           <p class="sub">Input MMK</p>
-          <input id="mmkIn" class="w-full border rounded p-2" type="text" placeholder="1000000" inputmode="numeric">
+          <input id="mmkIn" class="w-full border rounded p-2 big" type="text" placeholder="1000000" inputmode="numeric">
         </div>
         <div>
-          <label class="label">ဘတ်ငွေ</label>
+          <label class="label">
+            <span class="row">
+              <!-- TH flag -->
+              <svg class="flag" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="3" height="2" fill="#A51931"/>
+                <rect y="0.4" width="3" height="1.2" fill="#FFF"/>
+                <rect y="0.6" width="3" height="0.8" fill="#2D2A4A"/>
+              </svg>
+              ဘတ်ငွေ (THB)
+            </span>
+          </label>
           <p class="sub">Result THB</p>
-          <output id="thbOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px]"></output>
+          <output id="thbOut" class="block w-full rounded border bg-gray-50 p-2 min-h-[42px] big"></output>
         </div>
       </div>
       <div class="text-center mt-3 section-footer">
         <p class="note">တွက်ချက်နည်း – ဘတ် = မြန်မာငွေ × ဈေးနှုန်း ÷ ၁ သိန်း<br><span class="text-gray-400">Formula: THB = MMK × rate ÷ 100,000</span></p>
         <p id="rateNote2" class="rate-note"></p>
         <p class="thanks">Thailand Guide - Supplier By Ye Page ကို ယုံကြည်စွာ အသုံးပြုမှုအတွက် ကျေးဇူးအထူးတင်ပါတယ်။</p>
+        <p class="warning">ငွေလွှဲတိုင်း ဘဏ်အကောင့်တောင်းပေးပါ။ ဘဏ်အကောင့် မတောင်းဘဲ လွှဲလာသော မည်သည့် ငွေလွှဲမှ တာဝန်မယူပါ။</p>
       </div>
       <button type="button" onclick="saveBoxAsJpgVisible('box-mmk2thb','mmk-to-thb.jpg')" class="btn mt-3">Save JPEG</button>
     </section>
@@ -97,67 +166,87 @@
 <script>
 let lock=false;
 const $ = s => document.querySelector(s);
-const parseNum=v=>{const n=Number(String(v).replace(/,/g,''));return Number.isFinite(n)?n:NaN;}
-const fmt=(n,d=2)=>new Intl.NumberFormat(undefined,{maximumFractionDigits:d}).format(n);
+
+// Map Myanmar digits to ASCII without touching the visible input
+function mmDigitsToAscii(str){
+  if (str == null) return "";
+  const mm = "၀၁၂၃၄၅၆၇၈၉";
+  const en = "0123456789";
+  return String(str).replace(/[၀-၉]/g, d => en[mm.indexOf(d)]);
+}
+
+// Parser: keep user's typing intact; only convert for calculation
+function parseNum(v){
+  const s = String(v ?? "");
+  const ascii = mmDigitsToAscii(s);
+  // Allow digits, comma and dot; drop other characters for the numeric parse only
+  const cleaned = ascii.replace(/[^0-9.,-]/g, "").replace(/,/g, "");
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+// Integer-only formatter (rounded)
+const fmtInt = (n) => new Intl.NumberFormat(undefined,{ maximumFractionDigits: 0 }).format(Math.round(n));
 
 function refreshRateNote(){
   const r = getRate();
   if(Number.isFinite(r) && r>0){
     const inv = 100000 / r;
-    $('#rateNote1').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmt(r)} ဘတ် | ၁ ဘတ် = ${fmt(inv,2)} ကျပ်`;
-    $('#rateNote2').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmt(r)} ဘတ် | ၁ ဘတ် = ${fmt(inv,2)} ကျပ်`;
+    document.getElementById('rateNote1').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmtInt(r)} ဘတ် | ၁ ဘတ် = ${fmtInt(inv)} ကျပ်`;
+    document.getElementById('rateNote2').textContent = `မြန်မာငွေ ၁ သိန်း = ${fmtInt(r)} ဘတ် | ၁ ဘတ် = ${fmtInt(inv)} ကျပ်`;
   }else{
-    $('#rateNote1').textContent = '';
-    $('#rateNote2').textContent = '';
+    document.getElementById('rateNote1').textContent = '';
+    document.getElementById('rateNote2').textContent = '';
   }
 }
 
 function syncFrom100k(){
   if(lock) return; lock=true;
-  const r=parseNum($('#rate100k').value);
-  if(Number.isFinite(r)&&r>0){
+  const r=parseNum(document.getElementById('rate100k').value);
+  if(Number.isFinite(r) && r>0){
     const inv=100000/r;
-    $('#ratePerThb').value=fmt(inv,4);
+    document.getElementById('ratePerThb').value = (Math.round(inv * 10000)/10000).toString();
   }
   lock=false; refreshRateNote(); recalc();
 }
 function syncFromPerThb(){
   if(lock) return; lock=true;
-  const inv=parseNum($('#ratePerThb').value);
-  if(Number.isFinite(inv)&&inv>0){
+  const inv=parseNum(document.getElementById('ratePerThb').value);
+  if(Number.isFinite(inv) && inv>0){
     const r=100000/inv;
-    $('#rate100k').value=fmt(r,2);
+    document.getElementById('rate100k').value = (Math.round(r * 100)/100).toString();
   }
   lock=false; refreshRateNote(); recalc();
 }
 function getRate(){
-  const a=parseNum($('#rate100k').value); if(Number.isFinite(a)&&a>0) return a;
-  const b=parseNum($('#ratePerThb').value); if(Number.isFinite(b)&&b>0) return 100000/b;
+  const a=parseNum(document.getElementById('rate100k').value); if(Number.isFinite(a)&&a>0) return a;
+  const b=parseNum(document.getElementById('ratePerThb').value); if(Number.isFinite(b)&&b>0) return 100000/b;
   return NaN;
 }
 function recalc(){
   const rate=getRate();
-  const thb=parseNum($('#thbIn').value);
-  const mmk=parseNum($('#mmkIn').value);
-  $('#mmkOut').textContent=(Number.isFinite(rate)&&Number.isFinite(thb))?fmt((thb*100000)/rate)+' MMK':'';
-  $('#thbOut').textContent=(Number.isFinite(rate)&&Number.isFinite(mmk))?fmt((mmk*rate)/100000)+' THB':'';
+  const thb=parseNum(document.getElementById('thbIn').value);
+  const mmk=parseNum(document.getElementById('mmkIn').value);
+  document.getElementById('mmkOut').textContent=(Number.isFinite(rate)&&Number.isFinite(thb))?fmtInt((thb*100000)/rate)+' MMK':'';
+  document.getElementById('thbOut').textContent=(Number.isFinite(rate)&&Number.isFinite(mmk))?fmtInt((mmk*rate)/100000)+' THB':'';
 }
-$('#rate100k').addEventListener('input',syncFrom100k);
-$('#ratePerThb').addEventListener('input',syncFromPerThb);
-$('#thbIn').addEventListener('input',recalc);
-$('#mmkIn').addEventListener('input',recalc);
-$('#rate100k').value='760'; syncFrom100k();
 
-// NEW: Capture the VISIBLE section directly (no off-screen clone).
-// Hide buttons during capture so they won't appear.
+// Listeners: do NOT mutate the input; just compute
+document.getElementById('rate100k').addEventListener('input', syncFrom100k);
+document.getElementById('ratePerThb').addEventListener('input', syncFromPerThb);
+document.getElementById('thbIn').addEventListener('input', recalc);
+document.getElementById('mmkIn').addEventListener('input', recalc);
+
+// Default rate
+document.getElementById('rate100k').value='760';
+syncFrom100k();
+
+// Visible section capture (hide buttons during capture)
 async function saveBoxAsJpgVisible(id, filename){
   await document.fonts?.ready;
   const section = document.getElementById(id);
-
-  // ensure latest layout
   await new Promise(r => requestAnimationFrame(r));
 
-  // temporarily hide all buttons inside
   const hidden = [];
   section.querySelectorAll('button').forEach(btn => {
     hidden.push([btn, btn.style.display]);
@@ -174,10 +263,8 @@ async function saveBoxAsJpgVisible(id, filename){
     windowHeight: section.scrollHeight
   });
 
-  // restore buttons
   hidden.forEach(([el,prev]) => el.style.display = prev || "");
 
-  // compose a title on a new canvas (so title is present; still no button)
   const margin = 20;
   const titleText = 'Thailand Guide - Supplier By Ye';
   const titleHeight = 28;
